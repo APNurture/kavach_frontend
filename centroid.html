@@ -21,39 +21,41 @@
         <h4 class="headerOfCentroid" style="text-align: center;">Select your desired location to be safe guarded</h4>
         <br />
     </div>
-    <form id="form" method="post" style="margin-left: 15%; margin-right: 15%;">
+    <div id="form" method="post" style="margin-left: 15%; margin-right: 15%;">
     <!-- Location: <input type="text" id="location" style="width: 200px"/> -->
     Latitude: <input type="text" id="lat" style="width: 200px" placeholder="lat"/>
     Longitude: <input type="text" id="lng" style="width: 200px" placeholder="lng"/>
-    Radius(in metres): <input type="number" id="rad" style="width: 200px; margin: auto;" placeholder="rad"><br />
-    <a href="./servicement.html">
+    <a>
+        <button type="submit" onclick="addCoordinates()">Add</button>     
+    </a>
+    <!-- Radius(in metres): <input type="number" id="rad" style="width: 200px; margin: auto;" placeholder="rad"><br /> -->
+    <!-- <a href="./servicement.html">
         <input type="submit" value="Submit" />     
+    </a> -->
+    <a>
+        <button type="submit" onclick="submitCoorinates()">Submit</button>
     </a>
     
 
-    </form><br />
+    </div><br />
     
     <div id="us2" style="width: 70%; height:500px; margin: auto;"></div> 
   </body>
   <script>
+    
+    const multiCoords=[];
+    
+    
     var form = document.getElementById('form')
     form.addEventListener('submit',function(e){
+        /*
         e.preventDefault()
         var lat = parseFloat(document.getElementById('lat').value)
         var lng = parseFloat(document.getElementById('lng').value)
-        var rad = parseFloat(document.getElementById('rad').value)
-        // let headers = new Headers();
-        // headers.append('Content-Type', 'application/json');
-        // headers.append('Accept', 'application/json');
+        */
 
-        // headers.append('Access-Control-Allow-Origin', 'http://3.89.183.17:8090/api/');
-        // // headers.append('Access-Control-Allow-Credentials', 'true');
 
-        // headers.append('GET', 'POST', 'OPTIONS');
-
-        // console.log()
-        // const baseUrl = "http://3.89.183.17:8090/api/";
-        // axios.defaults.baseURL = 'https://api.example.com';
+        // var rad = parseFloat(document.getElementById('rad').value)
         fetch("http://3.89.24.93:8090/api/passCoordinates",{
             method:'POST',
             // mode:"no-cors",
@@ -77,6 +79,38 @@
             console.log(data)
         })
     })
+    
+    
+    function addCoordinates(){
+        var lat = parseFloat(document.getElementById('lat').value);
+        var lng = parseFloat(document.getElementById('lng').value);
+        let object = {latitude:lat,longitude:lng};
+        multiCoords.push(object);
+        console.log("inside addCoordinates");
+    }
+    function submitCoorinates(){
+        console.log("inside submitCoordinates");
+        console.log(multiCoords);
+        
+        var lat = parseFloat(document.getElementById('lat').value)
+        var lng = parseFloat(document.getElementById('lng').value)
+        fetch('http://54.221.6.162:8090/api/passCoordinates',{
+            method:'POST',
+            body:JSON.stringify(multiCoords),
+            headers:{
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Content-Type':'application/json; charset=UTF-8',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error(error));
+        
+    }
   </script>
 
 </html>
